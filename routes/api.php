@@ -38,3 +38,18 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 });
 
 
+use App\Http\Controllers\TicketController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/tickets', [TicketController::class, 'index']); // Lihat semua tiket
+    Route::post('/tickets', [TicketController::class, 'store']); // Buat tiket baru
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show']); // Lihat detail tiket
+    Route::post('/tickets/{ticket}/comments', [TicketController::class, 'addComment']); // Tambah komentar
+
+    // Admin-only routes
+    Route::middleware('role:admin')->group(function () {
+        Route::put('/tickets/{ticket}/status', [TicketController::class, 'updateStatus']); // Update status tiket
+        Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy']); // Hapus tiket
+    });
+});
+
